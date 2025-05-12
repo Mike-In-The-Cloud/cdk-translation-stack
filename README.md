@@ -42,52 +42,12 @@ This system consists of two primary asynchronous workflows triggered by S3 event
 
 ```mermaid
 graph TD
-    subgraph "Document Translation Workflow"
-        DocUser[User uploads document] --> S3Docs[S3: Documents Bucket];
-        S3Docs -- S3 Event --> EBTranslate[EventBridge: Doc Upload Rule];
-        EBTranslate --> LProc[Lambda: DocumentProcessor];
-        LProc --> SFN[Step Functions: TranslationWorkflow];
-        SFN --> SFNValidate[Task: Validate Document (LProc)];
-        SFNValidate --> SFNMap[Map State: Process Sections];
-        SFNMap -- Iterates --> LTrans[Lambda: TranslationProcessor];
-        LTrans --> BedrockTranslate[Bedrock: Translation Model];
-        LTrans -->|Optional RAG| OSSearchQuery[OpenSearch: Query TMX];
-        OSSearchQuery --> LTrans;
-        LTrans --> SFNMap;
-        SFNMap --> LCombine[Lambda: DocumentCombiner];
-        LCombine --> S3Translated[S3: Translated Document Output];
-        LCombine --> SFNNotifyChoice{Choice: Send Notification?};
-        SFNNotifyChoice -- Yes --> LNotify[Lambda: NotificationSender];
-        LNotify --> SES[SES: Email Notification];
-        SFNNotifyChoice -- No --> SFNEnd[Workflow End];
-        SES --> SFNEnd;
-    end
-
-    subgraph "TMX Ingestion Workflow"
-        TMXUser[User uploads TMX file] --> S3TMX[S3: TMX Bucket];
-        S3TMX -- S3 Event --> EBTMX[EventBridge: TMX Upload Rule];
-        EBTMX --> LTMX[Lambda: TMXProcessor];
-        LTMX --> BedrockEmbed[Bedrock: Embedding Model];
-        BedrockEmbed --> LTMX;
-        LTMX --> OSSearchIndex[OpenSearch: Index Embeddings];
-    end
-
-    style S3Docs fill:#FF9900,stroke:#333,stroke-width:2px;
-    style S3TMX fill:#FF9900,stroke:#333,stroke-width:2px;
-    style S3Translated fill:#FF9900,stroke:#333,stroke-width:2px;
-    style LProc fill:#FFD44F,stroke:#333,stroke-width:2px;
-    style LTrans fill:#FFD44F,stroke:#333,stroke-width:2px;
-    style LCombine fill:#FFD44F,stroke:#333,stroke-width:2px;
-    style LNotify fill:#FFD44F,stroke:#333,stroke-width:2px;
-    style LTMX fill:#FFD44F,stroke:#333,stroke-width:2px;
-    style SFN fill:#C6197D,stroke:#333,stroke-width:2px;
-    style EBTranslate fill:#7D7C7C,stroke:#333,stroke-width:2px;
-    style EBTMX fill:#7D7C7C,stroke:#333,stroke-width:2px;
-    style BedrockTranslate fill:#3D45E3,stroke:#333,stroke-width:2px;
-    style BedrockEmbed fill:#3D45E3,stroke:#333,stroke-width:2px;
-    style OSSearchQuery fill:#0073BB,stroke:#333,stroke-width:2px;
-    style OSSearchIndex fill:#0073BB,stroke:#333,stroke-width:2px;
-    style SES fill:#232F3E,stroke:#fff,stroke-width:2px,color:#fff;
+    A[Start] --> B[Validate Document]
+    B --> C{Valid?}
+    C -->|Yes| D[Process Document]
+    C -->|No| E[Reject Document]
+    D --> F[End]
+    E --> F
 ```
 
 **Brief Explanation of Diagram Components:**
