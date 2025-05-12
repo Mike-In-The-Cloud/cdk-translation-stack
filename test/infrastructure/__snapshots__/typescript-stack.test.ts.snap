@@ -1,0 +1,1758 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TypescriptStack Infrastructure Tests Snapshot Test 1`] = `
+{
+  "Mappings": {
+    "LatestNodeRuntimeMap": {
+      "af-south-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-east-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-east-2": {
+        "value": "nodejs20.x",
+      },
+      "ap-northeast-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-northeast-2": {
+        "value": "nodejs20.x",
+      },
+      "ap-northeast-3": {
+        "value": "nodejs20.x",
+      },
+      "ap-south-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-south-2": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-2": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-3": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-4": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-5": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-7": {
+        "value": "nodejs20.x",
+      },
+      "ca-central-1": {
+        "value": "nodejs20.x",
+      },
+      "ca-west-1": {
+        "value": "nodejs20.x",
+      },
+      "cn-north-1": {
+        "value": "nodejs20.x",
+      },
+      "cn-northwest-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-central-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-central-2": {
+        "value": "nodejs20.x",
+      },
+      "eu-isoe-west-1": {
+        "value": "nodejs18.x",
+      },
+      "eu-north-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-south-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-south-2": {
+        "value": "nodejs20.x",
+      },
+      "eu-west-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-west-2": {
+        "value": "nodejs20.x",
+      },
+      "eu-west-3": {
+        "value": "nodejs20.x",
+      },
+      "il-central-1": {
+        "value": "nodejs20.x",
+      },
+      "me-central-1": {
+        "value": "nodejs20.x",
+      },
+      "me-south-1": {
+        "value": "nodejs20.x",
+      },
+      "mx-central-1": {
+        "value": "nodejs20.x",
+      },
+      "sa-east-1": {
+        "value": "nodejs20.x",
+      },
+      "us-east-1": {
+        "value": "nodejs20.x",
+      },
+      "us-east-2": {
+        "value": "nodejs20.x",
+      },
+      "us-gov-east-1": {
+        "value": "nodejs20.x",
+      },
+      "us-gov-west-1": {
+        "value": "nodejs20.x",
+      },
+      "us-iso-east-1": {
+        "value": "nodejs18.x",
+      },
+      "us-iso-west-1": {
+        "value": "nodejs18.x",
+      },
+      "us-isob-east-1": {
+        "value": "nodejs18.x",
+      },
+      "us-isob-west-1": {
+        "value": "nodejs18.x",
+      },
+      "us-west-1": {
+        "value": "nodejs20.x",
+      },
+      "us-west-2": {
+        "value": "nodejs20.x",
+      },
+    },
+  },
+  "Outputs": {
+    "DocumentsBucketName": {
+      "Description": "The name of the bucket for documents to be translated",
+      "Value": {
+        "Ref": "StorageDocumentsBucket59145458",
+      },
+    },
+    "OpenSearchEndpoint": {
+      "Description": "The endpoint for the OpenSearch collection",
+      "Value": {
+        "Fn::GetAtt": [
+          "StorageTranslationCollection94E41DD9",
+          "CollectionEndpoint",
+        ],
+      },
+    },
+    "StateMachineArn": {
+      "Description": "The ARN of the translation state machine",
+      "Value": {
+        "Ref": "TranslationStateMachineResourceE18BB0A2",
+      },
+    },
+    "TMXBucketName": {
+      "Description": "The name of the bucket for TMX files",
+      "Value": {
+        "Ref": "StorageTMXBucketB24FCF4F",
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "EventsDocumentUploadRule88F810A0": {
+      "Properties": {
+        "Description": "Rule to trigger document processing lambda on S3 documents bucket uploads",
+        "EventPattern": {
+          "detail": {
+            "eventName": [
+              "PutObject",
+              "CompleteMultipartUpload",
+            ],
+            "eventSource": [
+              "s3.amazonaws.com",
+            ],
+            "requestParameters": {
+              "bucketName": [
+                {
+                  "Ref": "StorageDocumentsBucket59145458",
+                },
+              ],
+            },
+          },
+          "detail-type": [
+            "AWS API Call via CloudTrail",
+          ],
+          "source": [
+            "aws.s3",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "LambdaFunctionsDocumentProcessorCD7A37C2",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "EventsDocumentUploadRuleAllowEventRuleTestStackLambdaFunctionsDocumentProcessor7D470965B5514271": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsDocumentProcessorCD7A37C2",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "EventsDocumentUploadRule88F810A0",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "EventsTMXUploadRule31C1AC7A": {
+      "Properties": {
+        "Description": "Rule to trigger TMX processing lambda on S3 TMX bucket uploads",
+        "EventPattern": {
+          "detail": {
+            "eventName": [
+              "PutObject",
+              "CompleteMultipartUpload",
+            ],
+            "eventSource": [
+              "s3.amazonaws.com",
+            ],
+            "requestParameters": {
+              "bucketName": [
+                {
+                  "Ref": "StorageTMXBucketB24FCF4F",
+                },
+              ],
+            },
+          },
+          "detail-type": [
+            "AWS API Call via CloudTrail",
+          ],
+          "source": [
+            "aws.s3",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "LambdaFunctionsTMXProcessor46A9919C",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "EventsTMXUploadRuleAllowEventRuleTestStackLambdaFunctionsTMXProcessor3BDF17DBB0D2DA91": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsTMXProcessor46A9919C",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "EventsTMXUploadRule31C1AC7A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "GrantCrossServicePermissionsGrantPermsCr195D75E0": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEvent94D9238F",
+        "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEventServiceRoleDefaultPolicy1F1304C7",
+        "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEventServiceRole14398750",
+        "LambdaFunctionsDocumentCombiner22077417",
+        "LambdaFunctionsDocumentCombinerServiceRoleDefaultPolicy9049812B",
+        "LambdaFunctionsDocumentCombinerServiceRole879DF5A7",
+        "LambdaFunctionsDocumentProcessorCD7A37C2",
+        "LambdaFunctionsDocumentProcessorServiceRoleDefaultPolicyFDB108CF",
+        "LambdaFunctionsDocumentProcessorServiceRoleE31D5FCA",
+        "LambdaFunctionsGrantPermissionsFunction3AE1EA56",
+        "LambdaFunctionsGrantPermissionsFunctionServiceRoleDefaultPolicy03BB0718",
+        "LambdaFunctionsGrantPermissionsFunctionServiceRole7F528688",
+        "LambdaFunctionsNotificationSender8F4F49D3",
+        "LambdaFunctionsNotificationSenderServiceRoleDefaultPolicy34DCDBFC",
+        "LambdaFunctionsNotificationSenderServiceRole3C9FD911",
+        "LambdaFunctionsTranslationProcessorB14B46C0",
+        "LambdaFunctionsTranslationProcessorServiceRoleDefaultPolicyB77F9E08",
+        "LambdaFunctionsTranslationProcessorServiceRole94B16843",
+        "StateMachineRoleDefaultPolicy433448B5",
+        "StateMachineRole78EC082E",
+        "TranslationStateMachineResourceE18BB0A2",
+      ],
+      "Properties": {
+        "LambdaRoleArn": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsDocumentProcessorServiceRoleE31D5FCA",
+            "Arn",
+          ],
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEvent94D9238F",
+            "Arn",
+          ],
+        },
+        "StateMachineArn": {
+          "Ref": "TranslationStateMachineResourceE18BB0A2",
+        },
+        "StateMachineRoleArn": {
+          "Fn::GetAtt": [
+            "StateMachineRole78EC082E",
+            "Arn",
+          ],
+        },
+        "TargetLambdaArns": [
+          {
+            "Fn::GetAtt": [
+              "LambdaFunctionsDocumentProcessorCD7A37C2",
+              "Arn",
+            ],
+          },
+          {
+            "Fn::GetAtt": [
+              "LambdaFunctionsTranslationProcessorB14B46C0",
+              "Arn",
+            ],
+          },
+          {
+            "Fn::GetAtt": [
+              "LambdaFunctionsDocumentCombiner22077417",
+              "Arn",
+            ],
+          },
+          {
+            "Fn::GetAtt": [
+              "LambdaFunctionsNotificationSender8F4F49D3",
+              "Arn",
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::CloudFormation::CustomResource",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEvent94D9238F": {
+      "DependsOn": [
+        "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEventServiceRoleDefaultPolicy1F1304C7",
+        "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEventServiceRole14398750",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip",
+        },
+        "Description": "AWS CDK resource provider framework - onEvent (TestStack/GrantCrossServicePermissions/GrantPermsCrProvider)",
+        "Environment": {
+          "Variables": {
+            "USER_ON_EVENT_FUNCTION_ARN": {
+              "Fn::GetAtt": [
+                "LambdaFunctionsGrantPermissionsFunction3AE1EA56",
+                "Arn",
+              ],
+            },
+          },
+        },
+        "Handler": "framework.onEvent",
+        "Role": {
+          "Fn::GetAtt": [
+            "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEventServiceRole14398750",
+            "Arn",
+          ],
+        },
+        "Runtime": {
+          "Fn::FindInMap": [
+            "LatestNodeRuntimeMap",
+            {
+              "Ref": "AWS::Region",
+            },
+            "value",
+          ],
+        },
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEventServiceRole14398750": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEventServiceRoleDefaultPolicy1F1304C7": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "LambdaFunctionsGrantPermissionsFunction3AE1EA56",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "LambdaFunctionsGrantPermissionsFunction3AE1EA56",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "lambda:GetFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LambdaFunctionsGrantPermissionsFunction3AE1EA56",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEventServiceRoleDefaultPolicy1F1304C7",
+        "Roles": [
+          {
+            "Ref": "GrantCrossServicePermissionsGrantPermsCrProviderframeworkonEventServiceRole14398750",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "LambdaFunctionsDocumentCombiner22077417": {
+      "DependsOn": [
+        "LambdaFunctionsDocumentCombinerServiceRoleDefaultPolicy9049812B",
+        "LambdaFunctionsDocumentCombinerServiceRole879DF5A7",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "c4857ab99f2f0a0cecf1dd8fa7b1dd3d162f38c96dc27a9fe5a01ae2c9f369a5.zip",
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsDocumentCombinerServiceRole879DF5A7",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LambdaFunctionsDocumentCombinerServiceRole879DF5A7": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LambdaFunctionsDocumentCombinerServiceRoleDefaultPolicy9049812B": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "StorageDocumentsBucket59145458",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "StorageDocumentsBucket59145458",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LambdaFunctionsDocumentCombinerServiceRoleDefaultPolicy9049812B",
+        "Roles": [
+          {
+            "Ref": "LambdaFunctionsDocumentCombinerServiceRole879DF5A7",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "LambdaFunctionsDocumentProcessorCD7A37C2": {
+      "DependsOn": [
+        "LambdaFunctionsDocumentProcessorServiceRoleDefaultPolicyFDB108CF",
+        "LambdaFunctionsDocumentProcessorServiceRoleE31D5FCA",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "508c93cef54f42a9d7f6e5745d2979c8f0ce30dfd4237a79c62fa0058d10ab17.zip",
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsDocumentProcessorServiceRoleE31D5FCA",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LambdaFunctionsDocumentProcessorServiceRoleDefaultPolicyFDB108CF": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "StorageDocumentsBucket59145458",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "StorageDocumentsBucket59145458",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LambdaFunctionsDocumentProcessorServiceRoleDefaultPolicyFDB108CF",
+        "Roles": [
+          {
+            "Ref": "LambdaFunctionsDocumentProcessorServiceRoleE31D5FCA",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "LambdaFunctionsDocumentProcessorServiceRoleE31D5FCA": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LambdaFunctionsGrantPermissionsFunction3AE1EA56": {
+      "DependsOn": [
+        "LambdaFunctionsGrantPermissionsFunctionServiceRoleDefaultPolicy03BB0718",
+        "LambdaFunctionsGrantPermissionsFunctionServiceRole7F528688",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "fd3fe6000058aef9e541f52de54071fd35222acbc0768091bbaa44248395838b.zip",
+        },
+        "Description": "Custom Resource handler to grant IAM permissions post-creation",
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsGrantPermissionsFunctionServiceRole7F528688",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 60,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LambdaFunctionsGrantPermissionsFunctionServiceRole7F528688": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LambdaFunctionsGrantPermissionsFunctionServiceRoleDefaultPolicy03BB0718": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "iam:PutRolePolicy",
+                "iam:DeleteRolePolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LambdaFunctionsGrantPermissionsFunctionServiceRoleDefaultPolicy03BB0718",
+        "Roles": [
+          {
+            "Ref": "LambdaFunctionsGrantPermissionsFunctionServiceRole7F528688",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "LambdaFunctionsNotificationSender8F4F49D3": {
+      "DependsOn": [
+        "LambdaFunctionsNotificationSenderServiceRoleDefaultPolicy34DCDBFC",
+        "LambdaFunctionsNotificationSenderServiceRole3C9FD911",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "cff992f13cad39fd82b698044c27e85fcd64edc958cbee6858b0f74a8fd8f0e8.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "SENDER_EMAIL": "test@example.com",
+          },
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsNotificationSenderServiceRole3C9FD911",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LambdaFunctionsNotificationSenderServiceRole3C9FD911": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LambdaFunctionsNotificationSenderServiceRoleDefaultPolicy34DCDBFC": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ses:SendEmail",
+                "ses:SendRawEmail",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:ses:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":identity/test@example.com",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "StorageDocumentsBucket59145458",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "StorageDocumentsBucket59145458",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LambdaFunctionsNotificationSenderServiceRoleDefaultPolicy34DCDBFC",
+        "Roles": [
+          {
+            "Ref": "LambdaFunctionsNotificationSenderServiceRole3C9FD911",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "LambdaFunctionsSetLambdaEnvVarFunction1678832B": {
+      "DependsOn": [
+        "LambdaFunctionsSetLambdaEnvVarFunctionServiceRoleDefaultPolicyEAB5ABC7",
+        "LambdaFunctionsSetLambdaEnvVarFunctionServiceRole0AD2B10D",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "de1ec138c6ee4633ecb215f2445be833347daed8b02c9ea63d71a46cecbe196c.zip",
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsSetLambdaEnvVarFunctionServiceRole0AD2B10D",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 60,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LambdaFunctionsSetLambdaEnvVarFunctionServiceRole0AD2B10D": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LambdaFunctionsSetLambdaEnvVarFunctionServiceRoleDefaultPolicyEAB5ABC7": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:UpdateFunctionConfiguration",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LambdaFunctionsDocumentProcessorCD7A37C2",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LambdaFunctionsSetLambdaEnvVarFunctionServiceRoleDefaultPolicyEAB5ABC7",
+        "Roles": [
+          {
+            "Ref": "LambdaFunctionsSetLambdaEnvVarFunctionServiceRole0AD2B10D",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "LambdaFunctionsTMXProcessor46A9919C": {
+      "DependsOn": [
+        "LambdaFunctionsTMXProcessorServiceRoleDefaultPolicyC9D43066",
+        "LambdaFunctionsTMXProcessorServiceRoleF892DEA3",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "befc436b745326fe6977f535d2d3fee318e9d4088b7580416ffc80379bf1619b.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "BEDROCK_EMBEDDING_MODEL": "amazon.titan-embed-text-v1",
+            "OPENSEARCH_ENDPOINT": {
+              "Fn::GetAtt": [
+                "StorageTranslationCollection94E41DD9",
+                "CollectionEndpoint",
+              ],
+            },
+          },
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsTMXProcessorServiceRoleF892DEA3",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LambdaFunctionsTMXProcessorServiceRoleDefaultPolicyC9D43066": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "bedrock:InvokeModel",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:bedrock:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":model/amazon.titan-embed-text-v1",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "StorageTMXBucketB24FCF4F",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "StorageTMXBucketB24FCF4F",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LambdaFunctionsTMXProcessorServiceRoleDefaultPolicyC9D43066",
+        "Roles": [
+          {
+            "Ref": "LambdaFunctionsTMXProcessorServiceRoleF892DEA3",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "LambdaFunctionsTMXProcessorServiceRoleF892DEA3": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LambdaFunctionsTranslationProcessorB14B46C0": {
+      "DependsOn": [
+        "LambdaFunctionsTranslationProcessorServiceRoleDefaultPolicyB77F9E08",
+        "LambdaFunctionsTranslationProcessorServiceRole94B16843",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "0c6e9120c5bf517ba49892ff3121b2fb41ca2d6f799e47ebb8cd8e77ed2d71a1.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "BEDROCK_EMBEDDING_MODEL": "amazon.titan-embed-text-v1",
+            "BEDROCK_TRANSLATION_MODEL": "anthropic.claude-v2",
+            "OPENSEARCH_ENDPOINT": {
+              "Fn::GetAtt": [
+                "StorageTranslationCollection94E41DD9",
+                "CollectionEndpoint",
+              ],
+            },
+          },
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaFunctionsTranslationProcessorServiceRole94B16843",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LambdaFunctionsTranslationProcessorServiceRole94B16843": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LambdaFunctionsTranslationProcessorServiceRoleDefaultPolicyB77F9E08": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "bedrock:InvokeModel",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:bedrock:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":model/amazon.titan-embed-text-v1",
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:bedrock:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":model/anthropic.claude-v2",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LambdaFunctionsTranslationProcessorServiceRoleDefaultPolicyB77F9E08",
+        "Roles": [
+          {
+            "Ref": "LambdaFunctionsTranslationProcessorServiceRole94B16843",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "OpenSearchAccessPolicy": {
+      "Properties": {
+        "Description": "Allow Lambda functions to access OpenSearch collection",
+        "Name": "translation-memory-access",
+        "Policy": {
+          "Fn::Join": [
+            "",
+            [
+              "[{"Description":"Allow Lambda functions to access OpenSearch collection","Rules":[{"ResourceType":"collection","Resource":["",
+              {
+                "Fn::GetAtt": [
+                  "StorageTranslationCollection94E41DD9",
+                  "Arn",
+                ],
+              },
+              ""],"Permission":["aoss:APIAccessAll"]}],"Principal":["",
+              {
+                "Fn::GetAtt": [
+                  "LambdaFunctionsTMXProcessorServiceRoleF892DEA3",
+                  "Arn",
+                ],
+              },
+              "","",
+              {
+                "Fn::GetAtt": [
+                  "LambdaFunctionsTranslationProcessorServiceRole94B16843",
+                  "Arn",
+                ],
+              },
+              ""]}]",
+            ],
+          ],
+        },
+        "Type": "collection",
+      },
+      "Type": "AWS::OpenSearchServerless::AccessPolicy",
+    },
+    "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEvent02A34C96": {
+      "DependsOn": [
+        "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEventServiceRoleDefaultPolicy8A796F36",
+        "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEventServiceRole9B8B132A",
+        "StateMachineRoleDefaultPolicy433448B5",
+        "StateMachineRole78EC082E",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip",
+        },
+        "Description": "AWS CDK resource provider framework - onEvent (TestStack/SetStateMachineArnEnvVar/SetEnvVarCrProvider)",
+        "Environment": {
+          "Variables": {
+            "USER_ON_EVENT_FUNCTION_ARN": {
+              "Fn::GetAtt": [
+                "LambdaFunctionsSetLambdaEnvVarFunction1678832B",
+                "Arn",
+              ],
+            },
+          },
+        },
+        "Handler": "framework.onEvent",
+        "Role": {
+          "Fn::GetAtt": [
+            "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEventServiceRole9B8B132A",
+            "Arn",
+          ],
+        },
+        "Runtime": {
+          "Fn::FindInMap": [
+            "LatestNodeRuntimeMap",
+            {
+              "Ref": "AWS::Region",
+            },
+            "value",
+          ],
+        },
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEventServiceRole9B8B132A": {
+      "DependsOn": [
+        "StateMachineRoleDefaultPolicy433448B5",
+        "StateMachineRole78EC082E",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEventServiceRoleDefaultPolicy8A796F36": {
+      "DependsOn": [
+        "StateMachineRoleDefaultPolicy433448B5",
+        "StateMachineRole78EC082E",
+      ],
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "LambdaFunctionsSetLambdaEnvVarFunction1678832B",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "LambdaFunctionsSetLambdaEnvVarFunction1678832B",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "lambda:GetFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LambdaFunctionsSetLambdaEnvVarFunction1678832B",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEventServiceRoleDefaultPolicy8A796F36",
+        "Roles": [
+          {
+            "Ref": "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEventServiceRole9B8B132A",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "SetStateMachineArnEnvVarSetLambdaEnvVarCrB7E27AF5": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "LambdaFunctionsDocumentProcessorCD7A37C2",
+        "LambdaFunctionsDocumentProcessorServiceRoleDefaultPolicyFDB108CF",
+        "LambdaFunctionsDocumentProcessorServiceRoleE31D5FCA",
+        "LambdaFunctionsSetLambdaEnvVarFunction1678832B",
+        "LambdaFunctionsSetLambdaEnvVarFunctionServiceRoleDefaultPolicyEAB5ABC7",
+        "LambdaFunctionsSetLambdaEnvVarFunctionServiceRole0AD2B10D",
+        "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEvent02A34C96",
+        "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEventServiceRoleDefaultPolicy8A796F36",
+        "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEventServiceRole9B8B132A",
+        "StateMachineRoleDefaultPolicy433448B5",
+        "StateMachineRole78EC082E",
+        "TranslationStateMachineResourceE18BB0A2",
+      ],
+      "Properties": {
+        "EnvironmentVariables": {
+          "TRANSLATION_STATE_MACHINE_ARN": {
+            "Ref": "TranslationStateMachineResourceE18BB0A2",
+          },
+        },
+        "FunctionName": {
+          "Ref": "LambdaFunctionsDocumentProcessorCD7A37C2",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "SetStateMachineArnEnvVarSetEnvVarCrProviderframeworkonEvent02A34C96",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::CloudFormation::CustomResource",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "StateMachineRole78EC082E": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "states.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "StateMachineRoleDefaultPolicy433448B5": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "LambdaFunctionsDocumentProcessorCD7A37C2",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "LambdaFunctionsDocumentProcessorCD7A37C2",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "LambdaFunctionsDocumentCombiner22077417",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "LambdaFunctionsDocumentCombiner22077417",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "LambdaFunctionsNotificationSender8F4F49D3",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "LambdaFunctionsNotificationSender8F4F49D3",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "LambdaFunctionsTranslationProcessorB14B46C0",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "LambdaFunctionsTranslationProcessorB14B46C0",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "StateMachineRoleDefaultPolicy433448B5",
+        "Roles": [
+          {
+            "Ref": "StateMachineRole78EC082E",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "StorageDocumentsBucket59145458": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "BucketName": "translation-memory-docs",
+        "VersioningConfiguration": {
+          "Status": "Enabled",
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "StorageTMXBucketB24FCF4F": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "BucketName": "translation-memory-tmx",
+        "VersioningConfiguration": {
+          "Status": "Enabled",
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "StorageTranslationCollection94E41DD9": {
+      "Properties": {
+        "Description": "Collection for storing translation embeddings",
+        "Name": "translation-memory",
+        "Type": "VECTORSEARCH",
+      },
+      "Type": "AWS::OpenSearchServerless::Collection",
+    },
+    "TranslationStateMachineResourceE18BB0A2": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "StateMachineRoleDefaultPolicy433448B5",
+        "StateMachineRole78EC082E",
+      ],
+      "Properties": {
+        "DefinitionString": {
+          "Fn::Join": [
+            "",
+            [
+              "{"StartAt":"ValidateDocument","States":{"ValidateDocument":{"Next":"MapState","Retry":[{"ErrorEquals":["Lambda.ClientExecutionTimeoutException","Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","OutputPath":"$.Payload","Resource":"arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":states:::lambda:invoke","Parameters":{"FunctionName":"",
+              {
+                "Fn::GetAtt": [
+                  "LambdaFunctionsDocumentProcessorCD7A37C2",
+                  "Arn",
+                ],
+              },
+              "","Payload.$":"$"}},"MapState":{"Type":"Map","ResultPath":"$.translatedSections","Next":"CombineDocuments","InputPath":"$","Parameters":{"bucket.$'":"$.bucket","key.$'":"$.key","sourceLanguage.$'":"$.sourceLanguage","targetLanguage.$'":"$.targetLanguage","section.$'.$":"$$.Map.Item.Value"},"ItemsPath":"$.documentSections","MaxConcurrency":5,"Iterator":{"StartAt":"TranslateSection","States":{"TranslateSection":{"End":true,"Retry":[{"ErrorEquals":["Lambda.ClientExecutionTimeoutException","Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","InputPath":"$","OutputPath":"$.Payload","Resource":"arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":states:::lambda:invoke","Parameters":{"FunctionName":"",
+              {
+                "Fn::GetAtt": [
+                  "LambdaFunctionsTranslationProcessorB14B46C0",
+                  "Arn",
+                ],
+              },
+              "","Payload.$":"$"}}}}},"CombineDocuments":{"Next":"SendNotification","Retry":[{"ErrorEquals":["Lambda.ClientExecutionTimeoutException","Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","InputPath":"$","OutputPath":"$.Payload","Resource":"arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":states:::lambda:invoke","Parameters":{"FunctionName":"",
+              {
+                "Fn::GetAtt": [
+                  "LambdaFunctionsDocumentCombiner22077417",
+                  "Arn",
+                ],
+              },
+              "","Payload.$":"$"}},"SendNotification":{"End":true,"Retry":[{"ErrorEquals":["Lambda.ClientExecutionTimeoutException","Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","InputPath":"$","Resource":"arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":states:::lambda:invoke","Parameters":{"FunctionName":"",
+              {
+                "Fn::GetAtt": [
+                  "LambdaFunctionsNotificationSender8F4F49D3",
+                  "Arn",
+                ],
+              },
+              "","Payload.$":"$"}}}}",
+            ],
+          ],
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "StateMachineRole78EC082E",
+            "Arn",
+          ],
+        },
+        "StateMachineName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName",
+              },
+              "-TranslationWorkflow",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::StepFunctions::StateMachine",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

@@ -1,0 +1,352 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CustomResourceConstruct Snapshot Test 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "MyTestConstructSetEnvVarCrProviderframeworkonEvent1085C2A9": {
+      "DependsOn": [
+        "MyTestConstructSetEnvVarCrProviderframeworkonEventServiceRoleDefaultPolicyE1F6DC09",
+        "MyTestConstructSetEnvVarCrProviderframeworkonEventServiceRole17B54DBD",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip",
+        },
+        "Description": "AWS CDK resource provider framework - onEvent (TestStack/MyTestConstruct/SetEnvVarCrProvider)",
+        "Environment": {
+          "Variables": {
+            "USER_ON_EVENT_FUNCTION_ARN": {
+              "Fn::GetAtt": [
+                "ProviderLambda7AFCAC6B",
+                "Arn",
+              ],
+            },
+          },
+        },
+        "Handler": "framework.onEvent",
+        "Role": {
+          "Fn::GetAtt": [
+            "MyTestConstructSetEnvVarCrProviderframeworkonEventServiceRole17B54DBD",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs20.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MyTestConstructSetEnvVarCrProviderframeworkonEventServiceRole17B54DBD": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MyTestConstructSetEnvVarCrProviderframeworkonEventServiceRoleDefaultPolicyE1F6DC09": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "ProviderLambda7AFCAC6B",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "ProviderLambda7AFCAC6B",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "lambda:GetFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "ProviderLambda7AFCAC6B",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "MyTestConstructSetEnvVarCrProviderframeworkonEventServiceRoleDefaultPolicyE1F6DC09",
+        "Roles": [
+          {
+            "Ref": "MyTestConstructSetEnvVarCrProviderframeworkonEventServiceRole17B54DBD",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "MyTestConstructSetLambdaEnvVarCr13455FFC": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "MyTestConstructSetEnvVarCrProviderframeworkonEvent1085C2A9",
+        "MyTestConstructSetEnvVarCrProviderframeworkonEventServiceRoleDefaultPolicyE1F6DC09",
+        "MyTestConstructSetEnvVarCrProviderframeworkonEventServiceRole17B54DBD",
+        "ProviderLambda7AFCAC6B",
+        "ProviderLambdaServiceRoleDefaultPolicyEA0D4FB7",
+        "ProviderLambdaServiceRoleC9EAD03F",
+        "TargetLambdaE6C763FE",
+        "TargetLambdaServiceRole567EC23E",
+        "TestStateMachine3C216BE3",
+        "TestStateMachineRole2476F720",
+      ],
+      "Properties": {
+        "EnvironmentVariables": {
+          "TRANSLATION_STATE_MACHINE_ARN": {
+            "Ref": "TestStateMachine3C216BE3",
+          },
+        },
+        "FunctionName": {
+          "Ref": "TargetLambdaE6C763FE",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "MyTestConstructSetEnvVarCrProviderframeworkonEvent1085C2A9",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::CloudFormation::CustomResource",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "ProviderLambda7AFCAC6B": {
+      "DependsOn": [
+        "ProviderLambdaServiceRoleDefaultPolicyEA0D4FB7",
+        "ProviderLambdaServiceRoleC9EAD03F",
+      ],
+      "Properties": {
+        "Code": {
+          "ZipFile": "exports.handler = async () => {};",
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "ProviderLambdaServiceRoleC9EAD03F",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "ProviderLambdaServiceRoleC9EAD03F": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ProviderLambdaServiceRoleDefaultPolicyEA0D4FB7": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:UpdateFunctionConfiguration",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "TargetLambdaE6C763FE",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ProviderLambdaServiceRoleDefaultPolicyEA0D4FB7",
+        "Roles": [
+          {
+            "Ref": "ProviderLambdaServiceRoleC9EAD03F",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "TargetLambdaE6C763FE": {
+      "DependsOn": [
+        "TargetLambdaServiceRole567EC23E",
+      ],
+      "Properties": {
+        "Code": {
+          "ZipFile": "exports.handler = async () => {};",
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "TargetLambdaServiceRole567EC23E",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "TargetLambdaServiceRole567EC23E": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "TestStateMachine3C216BE3": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "TestStateMachineRole2476F720",
+      ],
+      "Properties": {
+        "DefinitionString": "{"StartAt":"StartState","States":{"StartState":{"Type":"Pass","End":true}}}",
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "TestStateMachineRole2476F720",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::StepFunctions::StateMachine",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "TestStateMachineRole2476F720": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "states.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

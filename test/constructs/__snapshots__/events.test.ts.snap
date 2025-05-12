@@ -1,0 +1,288 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EventsConstruct Snapshot Test 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "MockLambdaDocProcessor88CB8262": {
+      "DependsOn": [
+        "MockLambdaDocProcessorServiceRole24004A36",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "2dbcc137043e884f1c386366a8bccd26f28559a85682271109e308fb2fb0aa04.zip",
+        },
+        "FunctionName": "dummy-DocProcessor-func",
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "MockLambdaDocProcessorServiceRole24004A36",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MockLambdaDocProcessorServiceRole24004A36": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MockLambdaTmxProcessor6F8A6BFB": {
+      "DependsOn": [
+        "MockLambdaTmxProcessorServiceRole2336FA7B",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "2dbcc137043e884f1c386366a8bccd26f28559a85682271109e308fb2fb0aa04.zip",
+        },
+        "FunctionName": "dummy-TmxProcessor-func",
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "MockLambdaTmxProcessorServiceRole2336FA7B",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MockLambdaTmxProcessorServiceRole2336FA7B": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MockStorageDocsBucket0311B786": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "BucketName": "mock-docs-bucket-events",
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "MockStorageTmxBucket51279A9C": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "BucketName": "mock-tmx-bucket-events",
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "MyTestEventsDocumentUploadRuleAllowEventRuleMockLambdaDocProcessorBDEA2112F121C1D2": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "MockLambdaDocProcessor88CB8262",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "MyTestEventsDocumentUploadRuleB48BFFDE",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "MyTestEventsDocumentUploadRuleB48BFFDE": {
+      "Properties": {
+        "Description": "Rule to trigger document processing lambda on S3 documents bucket uploads",
+        "EventPattern": {
+          "detail": {
+            "eventName": [
+              "PutObject",
+              "CompleteMultipartUpload",
+            ],
+            "eventSource": [
+              "s3.amazonaws.com",
+            ],
+            "requestParameters": {
+              "bucketName": [
+                {
+                  "Ref": "MockStorageDocsBucket0311B786",
+                },
+              ],
+            },
+          },
+          "detail-type": [
+            "AWS API Call via CloudTrail",
+          ],
+          "source": [
+            "aws.s3",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "MockLambdaDocProcessor88CB8262",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "MyTestEventsTMXUploadRule5B888296": {
+      "Properties": {
+        "Description": "Rule to trigger TMX processing lambda on S3 TMX bucket uploads",
+        "EventPattern": {
+          "detail": {
+            "eventName": [
+              "PutObject",
+              "CompleteMultipartUpload",
+            ],
+            "eventSource": [
+              "s3.amazonaws.com",
+            ],
+            "requestParameters": {
+              "bucketName": [
+                {
+                  "Ref": "MockStorageTmxBucket51279A9C",
+                },
+              ],
+            },
+          },
+          "detail-type": [
+            "AWS API Call via CloudTrail",
+          ],
+          "source": [
+            "aws.s3",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "MockLambdaTmxProcessor6F8A6BFB",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "MyTestEventsTMXUploadRuleAllowEventRuleMockLambdaTmxProcessor438161B42A02780F": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "MockLambdaTmxProcessor6F8A6BFB",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "MyTestEventsTMXUploadRule5B888296",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
