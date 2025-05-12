@@ -42,12 +42,57 @@ This system consists of two primary asynchronous workflows triggered by S3 event
 
 ```mermaid
 graph TD
-    A[Start] --> B[Validate Document]
-    B --> C{Valid?}
-    C -->|Yes| D[Process Document]
-    C -->|No| E[Reject Document]
-    D --> F[End]
-    E --> F
+    %% Document Translation Workflow
+    DocUser[User] -->|Uploads Document| S3Docs[S3: Documents Bucket]
+    S3Docs -->|S3 Event| EBTranslate[EventBridge: Doc Upload Rule]
+    EBTranslate -->|Triggers| LProc[Lambda: DocumentProcessor]
+    LProc -->|Starts| SFN[Step Functions: TranslationWorkflow]
+
+    %% Translation Workflow Steps
+    SFN -->|Validates| SFNValidate[Task: Validate Document]
+    SFNValidate -->|Processes| SFNMap[Map State: Process Sections]
+    SFNMap -->|Iterates| LTrans[Lambda: TranslationProcessor]
+
+    %% Translation Processing
+    LTrans -->|Translates| BedrockTranslate[Bedrock: Translation Model]
+    LTrans -->|Optional| OSSearchQuery[OpenSearch: Query TMX]
+    OSSearchQuery -->|Returns| LTrans
+    LTrans -->|Completes| SFNMap
+
+    %% Document Completion
+    SFNMap -->|Combines| LCombine[Lambda: DocumentCombiner]
+    LCombine -->|Saves| S3Translated[S3: Translated Document]
+    LCombine -->|Notifies| SFNNotifyChoice{Choice: Send Notification?}
+    SFNNotifyChoice -->|Yes| LNotify[Lambda: NotificationSender]
+    LNotify -->|Sends| SES[SES: Email Notification]
+    SFNNotifyChoice -->|No| SFNEnd[Workflow End]
+    SES --> SFNEnd
+
+    %% TMX Ingestion Workflow
+    TMXUser[User] -->|Uploads TMX| S3TMX[S3: TMX Bucket]
+    S3TMX -->|S3 Event| EBTMX[EventBridge: TMX Upload Rule]
+    EBTMX -->|Triggers| LTMX[Lambda: TMXProcessor]
+    LTMX -->|Generates| BedrockEmbed[Bedrock: Embedding Model]
+    BedrockEmbed -->|Returns| LTMX
+    LTMX -->|Indexes| OSSearchIndex[OpenSearch: Index Embeddings]
+
+    %% Styling
+    classDef aws fill:#FF9900,stroke:#333,stroke-width:2px,color:#fff
+    classDef lambda fill:#FFD44F,stroke:#333,stroke-width:2px
+    classDef stepfunctions fill:#C6197D,stroke:#333,stroke-width:2px,color:#fff
+    classDef eventbridge fill:#7D7C7C,stroke:#333,stroke-width:2px,color:#fff
+    classDef bedrock fill:#3D45E3,stroke:#333,stroke-width:2px,color:#fff
+    classDef opensearch fill:#0073BB,stroke:#333,stroke-width:2px,color:#fff
+    classDef ses fill:#232F3E,stroke:#fff,stroke-width:2px,color:#fff
+
+    %% Apply styles
+    class S3Docs,S3TMX,S3Translated aws
+    class LProc,LTrans,LCombine,LNotify,LTMX lambda
+    class SFN,SFNValidate,SFNMap,SFNEnd stepfunctions
+    class EBTranslate,EBTMX eventbridge
+    class BedrockTranslate,BedrockEmbed bedrock
+    class OSSearchQuery,OSSearchIndex opensearch
+    class SES ses
 ```
 
 **Brief Explanation of Diagram Components:**
